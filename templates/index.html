@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Habit Tracker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Habit Tracker</h1>
+
+  <form method="post" action="{{ url_for('add_habit_form') }}" class="add-form">
+    <input type="text" name="name" placeholder="New habit name" required>
+    <button type="submit">Add habit</button>
+  </form>
+
+  {% if habits %}
+  <table>
+    <thead>
+      <tr>
+        <th>Habit</th>
+        <th>Streak</th>
+        <th>Today</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for habit in habits %}
+      <tr>
+        <td>{{ habit.name }}</td>
+        <td>{{ habit.streak }} day{{ '' if habit.streak == 1 else 's' }}</td>
+        <td>
+          {% if habit.completed_today %}
+            <span class="done">Done</span>
+          {% else %}
+            <form method="post" action="{{ url_for('complete_habit_form', habit_id=habit.id) }}">
+              <button type="submit">Mark complete</button>
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No habits yet. Add one above.</p>
+  {% endif %}
+</body>
+</html>
